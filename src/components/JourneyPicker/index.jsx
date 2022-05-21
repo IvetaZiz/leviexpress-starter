@@ -2,6 +2,18 @@ import React, { useEffect, useState } from 'react';
 import mapImage from './img/map.svg';
 import './style.css';
 
+const DatesOptions = ({ dates }) => {
+  return (
+    <>
+      {dates.map((date) => (
+        <option key={date.dateBasic} value={date.dateBasic}>
+          {date.dateCs}
+        </option>
+      ))}
+      <option value="">Vyberte</option>
+    </>
+  );
+};
 const CityOptions = ({ cities }) => {
   return (
     <>
@@ -18,6 +30,7 @@ export const JourneyPicker = ({ onJourneyChange }) => {
   const [toCity, setToCity] = useState('Město 03');
   const [date, setDate] = useState('Datum 04');
   const [cities, setCities] = useState([]);
+  const [dates, setDates] = useState([]);
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log('Odesílám formulář s cestou');
@@ -30,6 +43,9 @@ export const JourneyPicker = ({ onJourneyChange }) => {
     fetch('https://apps.kodim.cz/daweb/leviexpress/api/cities')
       .then((response) => response.json())
       .then((data) => setCities(data.results));
+    fetch('https://apps.kodim.cz/daweb/leviexpress/api/dates')
+      .then((response) => response.json())
+      .then((data) => setDates(data.results));
   }, []);
   return (
     <>
@@ -60,12 +76,7 @@ export const JourneyPicker = ({ onJourneyChange }) => {
             <label>
               <div className="journey-picker__label">Datum:</div>
               <select onChange={(event) => setDate(event.target.value)}>
-                <option value="">Vyberte</option>
-                <option value="datum01">Datum 01</option>
-                <option value="datum02">Datum 02</option>
-                <option value="datum03">Datum 03</option>
-                <option value="datum04">Datum 04</option>
-                <option value="datum05">Datum 05</option>
+                <DatesOptions dates={dates} />
               </select>
             </label>
             <div className="journey-picker__controls">
